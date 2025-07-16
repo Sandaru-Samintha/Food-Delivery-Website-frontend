@@ -1,5 +1,5 @@
 import logo from './logo.jpg'
-import header_img from './header_img.png'
+import header_img from './header_img.jpg'
 import menu_1 from './menu_1.png'
 import menu_2 from './menu_2.png'
 import menu_3 from './menu_3.png'
