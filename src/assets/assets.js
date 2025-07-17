@@ -52,7 +52,7 @@ import facebook_icon from './facebook_icon.png'
 import twitter_icon from './twitter_icon.png'
 import cross_icon from './cross_icon.png'
 import selector_icon from './selector_icon.png'
-import rating_starts from './rating_starts.png'
+import rating_stars from './rating_stars.png'
 import profile_icon from './profile_icon.png'
 import bag_icon from './bag_icon.png'
 import logout_icon from './logout_icon.png'
@@ -61,7 +61,7 @@ import parcel_icon from './parcel_icon.png'
 export const assets = {
     logo,
     header_img,
-    rating_starts,
+    rating_stars,
     add_icon_green,
     add_icon_white,
     remove_icon_red,
