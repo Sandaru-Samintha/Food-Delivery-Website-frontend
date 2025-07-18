@@ -19,9 +19,20 @@ function StoreContextProvider(props) {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 })); // when we remove the items in the crt
   };
 
-  useEffect(()=>{
-    console.log(cartItems);
-  },[cartItems])
+  const getTotalCartAmount = () => {
+    let totalAmount = 0;
+    for (const item in cartItems) {
+      if (cartItems[item] > 0) {
+        let itemInfo = food_list.find((product) => product.id === item);
+        totalAmount += itemInfo.price * cartItems[item];
+      }
+    }
+    return totalAmount;
+  }
+
+  // useEffect(()=>{
+  //   console.log(cartItems);
+  // },[cartItems])
 
   //using useContext we can pass the value in any where (any pages)
   const contextValue = {
@@ -30,6 +41,7 @@ function StoreContextProvider(props) {
     setCartItems,
     addToCart,
     removeFromCart,
+    getTotalCartAmount
   };
 
   return (
