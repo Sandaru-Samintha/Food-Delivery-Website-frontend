@@ -11,7 +11,7 @@ function Footer() {
             style={{
               width: "120px",
               height: "120px",
-              border: "2px solid #b8b7b7",
+              border: "3px solid white",
               padding: "4px",
             }}
             src={assets.logo}

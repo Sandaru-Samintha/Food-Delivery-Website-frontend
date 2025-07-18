@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 
-function Navbar() {
+function Navbar({setShowLogin}) {
 
   const [menu,setMenu]=useState("Home")
   return (
@@ -25,7 +25,7 @@ function Navbar() {
           <FaShoppingCart  className='navbar-icon'/>
           <div className='dot'></div>
         </div>
-        <button>Sign in</button>
+        <button onClick={()=>setShowLogin(true)}>Sign in</button>
       </div>
 
     </div>
