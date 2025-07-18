@@ -2,16 +2,18 @@ import { CiSearch } from "react-icons/ci";
 import { FaShoppingCart } from "react-icons/fa";
 import { assets } from '../../assets/assets';
 import "./Navbar.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { StoreContext } from "../../Context/StoreContext";
 
 
 function Navbar({setShowLogin}) {
 
   const [menu,setMenu]=useState("Home")
+  const {getTotalCartAmount}=useContext(StoreContext)
   return (
     <div className='navbar'>
-      <img src={assets.logo} alt=""  className="logo"  />
+      <Link to="/"><img src={assets.logo} alt=""  className="logo"  /></Link>
       <ul className='navbar-menu'>
         <Link to='/' onClick={()=>setMenu("Home")} className={menu==="Home"?"active":""}>Home</Link>
         <a href="#explore-menu" onClick={()=>setMenu("Menu")} className={menu==="Menu"?"active":""}>Menu</a>
@@ -22,8 +24,8 @@ function Navbar({setShowLogin}) {
       <div className='navbar-right'>
         <CiSearch className='navbar-icon'/>
         <div className='navbar-search-icon'>
-          <FaShoppingCart  className='navbar-icon'/>
-          <div className='dot'></div>
+          <Link to="/cart"><FaShoppingCart  className='navbar-icon'/></Link>
+          <div className={getTotalCartAmount()===0?"":"dot"}></div>
         </div>
         <button onClick={()=>setShowLogin(true)}>Sign in</button>
       </div>
