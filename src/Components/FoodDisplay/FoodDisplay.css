@@ -4,7 +4,7 @@
 
 .food-display h2{
   font-size: max(2vw,24px);
-  font-weight: 600;
+  font-weight: 500;
 }
 .food-display-list{
   display: grid;
