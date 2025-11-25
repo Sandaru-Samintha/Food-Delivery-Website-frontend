@@ -37,6 +37,15 @@ function StoreContextProvider(props) {
   // },[cartItems])
 
   //using useContext we can pass the value in any where (any pages)
+
+
+  // when refresh the page automatically logout,so we need do stop this using that method
+  useEffect(()=>{
+    if(localStorage.getItem("token"))
+    {
+      setToken(localStorage.getItem("token"))
+    }
+  },[])
   const contextValue = {
     food_list,
     cartItems,
