@@ -1,5 +1,5 @@
+import axios from "axios";
 import { createContext, useEffect, useState } from "react";
-import { food_list } from "../assets/assets";
 
 export const StoreContext = createContext(null);
 
@@ -7,6 +7,8 @@ function StoreContextProvider(props) {
   const [cartItems, setCartItems] = useState({});
   const url = "http://localhost:4000";
   const [token,setToken] = useState("")
+
+  const[food_list,setFoodList]=useState([])
 
   const addToCart = (itemId) => {
     //if there is no add items in the cart , newly add the product in the cart
@@ -39,12 +41,23 @@ function StoreContextProvider(props) {
   //using useContext we can pass the value in any where (any pages)
 
 
+//use to fetch the food list from database 
+const fetchFoodList = async()=>{
+  const response = await axios.get(url+"/api/food/list");
+  setFoodList(response.data.data)
+}
+
+
   // when refresh the page automatically logout,so we need do stop this using that method
   useEffect(()=>{
-    if(localStorage.getItem("token"))
-    {
-      setToken(localStorage.getItem("token"))
+    async function loadData() {
+      await fetchFoodList();
+      if(localStorage.getItem("token"))
+      {
+        setToken(localStorage.getItem("token"));
+      }
     }
+    loadData()
   },[])
   const contextValue = {
     food_list,
