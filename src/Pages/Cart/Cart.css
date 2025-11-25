@@ -22,6 +22,7 @@
 }
 .cart-items-item .cross{
   cursor: pointer;
+  color: rgb(239, 74, 74);;
 }
 .cart-bottom{
   margin-top: 80px;

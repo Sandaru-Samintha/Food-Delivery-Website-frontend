@@ -31,7 +31,7 @@ function Cart() {
                   <p>{cartItems[item.id]}</p>
                   <p>${item.price * cartItems[item.id]}</p>
                   <p className="cross" onClick={() => removeFromCart(item.id)}>
-                    x
+                    Delete
                   </p>
                 </div>
                 <hr />
