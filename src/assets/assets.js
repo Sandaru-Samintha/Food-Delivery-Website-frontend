@@ -133,7 +133,7 @@ export const food_list = [
         name: "Clover Salad",
         image: food_3,
         price: 16,
-        description: "Food provides essential nutrients for overall health and well-being",
+        description: "ood provides essential nutrients for overall health and well-being",
         category: "Salad"
     }, {
         id: "4",
