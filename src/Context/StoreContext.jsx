@@ -57,7 +57,7 @@ const fetchFoodList = async()=>{
         setToken(localStorage.getItem("token"));
       }
     }
-    loadData()
+    loadData();
   },[])
   const contextValue = {
     food_list,
