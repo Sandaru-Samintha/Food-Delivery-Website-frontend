@@ -21,16 +21,16 @@ function Cart() {
         <br />
         <hr />
         {food_list.map((item, index) => {
-          if (cartItems[item.id] > 0) {
+          if (cartItems[item._id] > 0) {
             return (
               <div>
                 <div className="cart-items-title cart-items-item">
                   <img src={url+"/images/"+item.image} alt="" />
                   <p>{item.name}</p>
                   <p>${item.price}</p>
-                  <p>{cartItems[item.id]}</p>
-                  <p>${item.price * cartItems[item.id]}</p>
-                  <p className="cross" onClick={() => removeFromCart(item.id)}>
+                  <p>{cartItems[item._id]}</p>
+                  <p>${item.price * cartItems[item._id]}</p>
+                  <p className="cross" onClick={() => removeFromCart(item._id)}>
                     Delete
                   </p>
                 </div>
