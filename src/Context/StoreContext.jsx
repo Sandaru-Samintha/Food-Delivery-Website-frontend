@@ -10,29 +10,36 @@ function StoreContextProvider(props) {
 
   const[food_list,setFoodList]=useState([])
 
-  const addToCart = (itemId) => {
+  const addToCart = async (itemId) => {
     //if there is no add items in the cart , newly add the product in the cart
     if (!cartItems[itemId]) {
       setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
     } else {
       setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 })); //if there is the items alredy in the the cart value is increasing by when adding
     }
+    if(token){
+      await axios.post(url+"/api/cart/add",{itemId},{headers:{token}})
+    }
   };
 
-  const removeFromCart = (itemId) => {
+  const removeFromCart = async(itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 })); // when we remove the items in the crt
+    if(token)
+    {
+      await axios.post(url+"/api/cart/remove",{itemId},{headers:{token}})
+    }
   };
 
   const getTotalCartAmount = () => {
     let totalAmount = 0;
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
-        let itemInfo = food_list.find((product) => product.id === item);
+        let itemInfo = food_list.find((product) => product._id === item);
         totalAmount += itemInfo.price * cartItems[item];
       }
     }
     return totalAmount;
-  }
+  };
 
   // useEffect(()=>{
   //   console.log(cartItems);
@@ -47,6 +54,11 @@ const fetchFoodList = async()=>{
   setFoodList(response.data.data)
 }
 
+const loadCartData = async (token)=>{
+  const response = await axios.post(url+"/api/cart/get",{},{headers:{token}})
+  setCartItems(response.data.cartData);
+}
+
 
   // when refresh the page automatically logout,so we need do stop this using that method
   useEffect(()=>{
@@ -55,6 +67,7 @@ const fetchFoodList = async()=>{
       if(localStorage.getItem("token"))
       {
         setToken(localStorage.getItem("token"));
+        await loadCartData(localStorage.getItem("token"))
       }
     }
     loadData();

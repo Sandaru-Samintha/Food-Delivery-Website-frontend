@@ -18,7 +18,7 @@ function FoodDisplay({category}) {
             return (
               <FoodItem
                 key={index}
-                id={item.id}
+                id={item._id}
                 name={item.name}
                 description={item.description}
                 image={item.image}
