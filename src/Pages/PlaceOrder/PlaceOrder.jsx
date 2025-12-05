@@ -25,10 +25,10 @@ function PlaceOrder() {
 
   }
 
-// useEffect(()=>{
-//   console.log(data);
+useEffect(()=>{
+  console.log(data);
   
-// },[data])
+},[data])
 
   return (
     <form className='place-order'>
