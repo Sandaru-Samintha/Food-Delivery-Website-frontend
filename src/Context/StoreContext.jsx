@@ -11,53 +11,77 @@ function StoreContextProvider(props) {
   const[food_list,setFoodList]=useState([])
 
   const addToCart = async (itemId) => {
-    //if there is no add items in the cart , newly add the product in the cart
-    if (!cartItems[itemId]) {
-      setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
-    } else {
-      setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 })); //if there is the items alredy in the the cart value is increasing by when adding
-    }
-    if(token){
-      await axios.post(url+"/api/cart/add",{itemId},{headers:{token}})
+    if (!itemId) return; // guard against undefined/falsy ids
+    const id = String(itemId);
+    // safe functional update
+    setCartItems((prev) => ({ ...prev, [id]: (prev[id] || 0) + 1 }));
+    if (token) {
+      try {
+        await axios.post(url + "/api/cart/add", { itemId: id }, { headers: { token } });
+      } catch (err) {
+        console.warn("addToCart sync failed:", err?.message || err);
+      }
     }
   };
 
   const removeFromCart = async(itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 })); // when we remove the items in the crt
-    if(token)
-    {
-      await axios.post(url+"/api/cart/remove",{itemId},{headers:{token}})
+    if (!itemId) return;
+    const id = String(itemId);
+    setCartItems((prev) => {
+      const current = prev[id] || 0;
+      const next = Math.max(0, current - 1);
+      const copy = { ...prev };
+      if (next > 0) copy[id] = next;
+      else delete copy[id]; // remove zero entries
+      return copy;
+    });
+    if (token) {
+      try {
+        await axios.post(url + "/api/cart/remove", { itemId: id }, { headers: { token } });
+      } catch (err) {
+        console.warn("removeFromCart sync failed:", err?.message || err);
+      }
     }
   };
 
   const getTotalCartAmount = () => {
     let totalAmount = 0;
     for (const item in cartItems) {
-      if (cartItems[item] > 0) {
-        let itemInfo = food_list.find((product) => product._id === item);
-        totalAmount += itemInfo.price * cartItems[item];
+      const qty = cartItems[item];
+      if (qty > 0) {
+        let itemInfo = food_list.find((product) => String(product._id) === String(item));
+        if (!itemInfo) continue; // skip missing products
+        const price = Number(itemInfo.price) || 0;
+        totalAmount += price * qty;
       }
     }
     return totalAmount;
   };
 
-  // useEffect(()=>{
-  //   console.log(cartItems);
-  // },[cartItems])
+  //use to fetch the food list from database 
+  const fetchFoodList = async()=>{
+    const response = await axios.get(url+"/api/food/list");
+    setFoodList(response.data.data)
+  }
 
-  //using useContext we can pass the value in any where (any pages)
-
-
-//use to fetch the food list from database 
-const fetchFoodList = async()=>{
-  const response = await axios.get(url+"/api/food/list");
-  setFoodList(response.data.data)
-}
-
-const loadCartData = async (token)=>{
-  const response = await axios.post(url+"/api/cart/get",{},{headers:{token}})
-  setCartItems(response.data.cartData);
-}
+  const loadCartData = async (token)=>{
+    try {
+      const response = await axios.post(url+"/api/cart/get",{},{headers:{token}});
+      const raw = response?.data?.cartData || {};
+      const cleaned = {};
+      Object.entries(raw).forEach(([k, v]) => {
+        if (!k) return;
+        const key = String(k);
+        const qty = Number(v) || 0;
+        if (key === "undefined" || qty <= 0) return;
+        cleaned[key] = qty;
+      });
+      setCartItems(cleaned);
+    } catch (err) {
+      console.warn("loadCartData failed:", err?.message || err);
+      setCartItems({});
+    }
+  }
 
 
   // when refresh the page automatically logout,so we need do stop this using that method

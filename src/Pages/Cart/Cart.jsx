@@ -1,13 +1,15 @@
-import React, { useContext } from "react";
-import "./Cart.css";
-import { StoreContext } from "../../Context/StoreContext";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { StoreContext } from "../../Context/StoreContext";
+import "./Cart.css";
 
 function Cart() {
   const { cartItems, food_list, removeFromCart, getTotalCartAmount, url } =
     useContext(StoreContext);
 
   const navigate = useNavigate();
+  const subtotal = getTotalCartAmount();
+
   return (
     <div className="cart">
       <div className="cart-items">
@@ -21,16 +23,17 @@ function Cart() {
         </div>
         <br />
         <hr />
-        {food_list.map((item, index) => {
-          if (cartItems[item._id] > 0) {
+        {food_list.map((item) => {
+          const qty = cartItems[item._id] || 0;
+          if (qty > 0) {
             return (
               <div key={item._id}>
                 <div className="cart-items-title cart-items-item">
-                  <img src={url + "/images/" + item.image} alt="" />
+                  <img src={url + "/images/" + item.image} alt={item.name || ""} />
                   <p>{item.name}</p>
                   <p>${item.price}</p>
-                  <p>{cartItems[item._id]}</p>
-                  <p>${item.price * cartItems[item._id]}</p>
+                  <p>{qty}</p>
+                  <p>${item.price * qty}</p>
                   <p className="cross" onClick={() => removeFromCart(item._id)}>
                     Delete
                   </p>
@@ -39,6 +42,7 @@ function Cart() {
               </div>
             );
           }
+          return null;
         })}
       </div>
       <div className="cart-bottom">
@@ -47,22 +51,27 @@ function Cart() {
           <div>
             <div className="cart-total-details">
               <p>Subtotal</p>
-              <p>${getTotalCartAmount()}</p>
+              <p>${subtotal}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <p>Delivery Fee</p>
-              <p>${getTotalCartAmount() === 0 ? 0 : 2}</p>
+              <p>${subtotal === 0 ? 0 : 2}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <b>Total</b>
-              <b>
-                ${getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}
-              </b>
+              <b>${subtotal === 0 ? 0 : subtotal + 2}</b>
             </div>
           </div>
-          <button onClick={() => navigate("/order")}>
+          <button
+            disabled={subtotal === 0}
+            onClick={() => {
+              if (subtotal > 0) {
+                navigate("/order");
+              }
+            }}
+          >
             PROCEED TO CHECKOUT
           </button>
         </div>
